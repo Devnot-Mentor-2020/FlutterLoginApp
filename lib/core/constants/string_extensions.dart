@@ -1,5 +1,5 @@
-import 'regex_constants.dart';
-extension StringValidator on String {
+import 'file:///C:/Users/Alperen/IdeaProjects/loginapp/lib/core/constants/regex_constants.dart';
+extension StringValidator on String{
   // TODO: Constatns...
   String get isValidEmail {
     return RegExp(RegexConstants.instance.emailRegex).hasMatch(this)
