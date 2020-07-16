@@ -17,4 +17,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class Deneme extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("hello"),),
+    );
+  }
+}
 

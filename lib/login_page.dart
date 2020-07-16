@@ -1,5 +1,8 @@
+import 'dart:core';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'core/string_extensions.dart';
+import 'package:loginapp/core/service/firebase_authentication.dart';
+import 'core/constants/string_extensions.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -118,10 +121,17 @@ class _LoginPageState extends State<LoginPage> {
                 );
   }
 
-  void _saveGivenInformation(BuildContext context) {
+  Future<void> _saveGivenInformation(BuildContext context) async{
     if(formKey.currentState.validate()){
       formKey.currentState.save();
-      debugPrint("asdasd = " + _email +" bosuk" + _password);
+      try{
+        await FirebaseAuthentication.instance.signIn(_email,_password);
+        print("oldu");
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Git()));
+      }
+      catch(e){
+        print(e.message);
+      }
       _scaffoldkey.currentState.showSnackBar(SnackBar(
         backgroundColor: Colors.redAccent.shade100,
         content: Text("Email: $_email\nPassword: $_password"),
@@ -129,3 +139,13 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 }
+
+class Git extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Hello"),),
+    );
+  }
+}
+
