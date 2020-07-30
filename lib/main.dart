@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loginapp/login_page.dart';
+import 'package:loginapp/view/login_page.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -16,13 +16,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class Deneme extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("hello"),),
-    );
-  }
-}
-
