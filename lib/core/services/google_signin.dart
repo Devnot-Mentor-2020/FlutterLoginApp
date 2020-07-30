@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignHelper{
@@ -6,12 +7,9 @@ class GoogleSignHelper{
 
   static GoogleSignHelper get instance => _instance;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<GoogleSignInAccount> signIn() async {
     final user = await _googleSignIn.signIn();
     if(user != null){
@@ -27,7 +25,6 @@ class GoogleSignHelper{
     if(await _googleSignIn.isSignedIn()){
       final user = _googleSignIn.currentUser;
       final userData = await user.authentication;
-      print(userData.accessToken);
       return userData;
     }
     return null;
@@ -48,5 +45,19 @@ class GoogleSignHelper{
     final bool = _googleSignIn.isSignedIn();
     print(bool);
     return bool;
+  }
+
+  Future<FirebaseUser> handleSignIn() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + user.displayName);
+    return user;
   }
 }

@@ -52,9 +52,12 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Colors.green,
                       onPressed: ()
                       async{
-                        await GoogleSignHelper.instance.signIn();
-                        if(await GoogleSignHelper.instance.isSignedIn() == true){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => CourseHomePage()));
+                        var data = GoogleSignHelper.instance.signIn();
+                        if(data != null){
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => CourseHomePage()));
+                          var userData = await GoogleSignHelper.instance.handleSignIn();
+                          //print("accesstoken " + userData.accessToken);
+                          //print("idToken " + userData.idToken);
                         }
                       },
                       icon: Icon(Icons.outlined_flag),
