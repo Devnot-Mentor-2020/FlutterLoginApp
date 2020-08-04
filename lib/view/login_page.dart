@@ -1,8 +1,11 @@
 import 'dart:core';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:loginapp/core/service/firebase_authentication.dart';
-import 'core/constants/string_extensions.dart';
+import 'package:loginapp/core/services/google_signin.dart';
+import 'file:///C:/Users/Alperen/IdeaProjects/loginapp/lib/core/services/firebase_authentication.dart';
+import 'file:///C:/Users/Alperen/IdeaProjects/loginapp/lib/view/course_view/course_operations_homeview.dart';
+import 'package:loginapp/view/signup_page.dart';
+import 'package:provider/provider.dart';
+import '../core/constants/string_extensions.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -15,10 +18,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          
+          floatingActionButton: FloatingActionButton(onPressed: () async{
+            await GoogleSignHelper.instance.signOut();
+            },
+          heroTag: "btn1",
+          ),
           key: _scaffoldkey,
-          appBar: AppBar(title: Text("Log In Page",style: TextStyle(color: Colors.white),),),
-          body: SingleChildScrollView(child: loginForm(context)),
+          appBar: AppBar(title: Text("Login Page",style: TextStyle(color: Colors.white),),),
+          body: SingleChildScrollView(
+              child: loginForm(context),
+          ),
           );
   }
 
@@ -27,15 +36,35 @@ class _LoginPageState extends State<LoginPage> {
             key: formKey,
             autovalidate: true,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 welcomeContainer(context),
                 signinContainer(context),
-                          SizedBox(height: MediaQuery.of(context).size.height*0.05,),
+                SizedBox(height: MediaQuery.of(context).size.height*0.05,),
                 usernameTextField(),
                 passwordTextField(),
-                forgotPasswordButton(context),
-                loginButton(context),
+                signUpNavigatorButton(context),
+                Wrap(
+                  spacing: 10,
+                  children: <Widget>[
+                    loginButton(context),
+                    FloatingActionButton.extended(
+                      heroTag: "btn2",
+                      backgroundColor: Colors.green,
+                      onPressed: ()
+                      async{
+                        var data = GoogleSignHelper.instance.signIn();
+                        if(data != null){
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => CourseHomePage()));
+                          var userData = await GoogleSignHelper.instance.handleSignIn();
+                          //print("accesstoken " + userData.accessToken);
+                          //print("idToken " + userData.idToken);
+                        }
+                      },
+                      icon: Icon(Icons.outlined_flag),
+                      label: Text("Google Login"),
+                    ),
+                  ],
+                )
               ],
             ),
           );
@@ -52,20 +81,23 @@ class _LoginPageState extends State<LoginPage> {
                       border: Border.all(color: Colors.white, width: 2.0),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Center(child: Text('Log In', style: TextStyle(fontSize: 18.0, color: Colors.white),),),
+                    child: Center(child: Text("Log in ", style: TextStyle(fontSize: 18.0, color: Colors.white),),),
                   ),
                 );
   }
 
-  Align forgotPasswordButton(BuildContext context) {
+  Align signUpNavigatorButton(BuildContext context) {
     return Align(
                   alignment:Alignment.centerRight,
                   child: InkWell(
-                    onTap: () => debugPrint('Forgot clicked'),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage())),
                     child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
                       width: MediaQuery.of(context).size.width*(1/2),
                       height: 50,
-                      child: Center(child: Text('Forgot Password', style:  TextStyle(fontSize: 18.0, color: Colors.black),),),
+                      child: Center(child: Text('Sign Up', style:  TextStyle(fontSize: 18.0, color: Colors.black),),),
                     ),
                   ),
                 );
@@ -126,8 +158,8 @@ class _LoginPageState extends State<LoginPage> {
       formKey.currentState.save();
       try{
         await FirebaseAuthentication.instance.signIn(_email,_password);
-        print("oldu");
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Git()));
+        print("information saved");
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CourseHomePage()));
       }
       catch(e){
         print(e.message);
@@ -137,15 +169,6 @@ class _LoginPageState extends State<LoginPage> {
         content: Text("Email: $_email\nPassword: $_password"),
       ));
     }
-  }
-}
-
-class Git extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Hello"),),
-    );
   }
 }
 
