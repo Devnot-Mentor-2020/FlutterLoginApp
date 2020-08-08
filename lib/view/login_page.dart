@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
           heroTag: "btn1",
           ),
           key: _scaffoldkey,
-          appBar: AppBar(title: Text("Page Adı değiştirdim",style: TextStyle(color: Colors.black),),),
+          appBar: AppBar(title: Text("Login Page",style: TextStyle(color: Colors.white),),),
           body: SingleChildScrollView(
               child: loginForm(context),
           ),
