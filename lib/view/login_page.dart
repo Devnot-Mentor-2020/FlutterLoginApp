@@ -4,7 +4,6 @@ import 'package:loginapp/core/services/google_signin.dart';
 import 'file:///C:/Users/Alperen/IdeaProjects/loginapp/lib/core/services/firebase_authentication.dart';
 import 'file:///C:/Users/Alperen/IdeaProjects/loginapp/lib/view/course_view/course_operations_homeview.dart';
 import 'package:loginapp/view/signup_page.dart';
-import 'package:provider/provider.dart';
 import '../core/constants/string_extensions.dart';
 class LoginPage extends StatefulWidget {
   @override
@@ -54,8 +53,8 @@ class _LoginPageState extends State<LoginPage> {
                       async{
                         var data = GoogleSignHelper.instance.signIn();
                         if(data != null){
-                          //Navigator.push(context, MaterialPageRoute(builder: (context) => CourseHomePage()));
                           var userData = await GoogleSignHelper.instance.handleSignIn();
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => CourseHomePage()));
                           //print("accesstoken " + userData.accessToken);
                           //print("idToken " + userData.idToken);
                         }

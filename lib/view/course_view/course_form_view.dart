@@ -87,7 +87,7 @@ class _CourseFormViewState extends State<CourseFormView> {
     if(formKey.currentState.validate()){
       formKey.currentState.save();
       Course course = Course(name: _courseName,grade: _letterGrade);
-      await FirebaseService.prefInstance.putCourse(course);
+      await FirebaseService.prefInstance.postCourse(course);
       final scaffold = Scaffold.of(context);
       scaffold.showSnackBar(SnackBar(
         backgroundColor: Colors.green,
