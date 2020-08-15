@@ -51,7 +51,6 @@ class FirebaseService{
     //int indexToPut = SharedAppData.numberOfCourses;
     Map<String, String> headers = {"Content-type": "application/json"};
     var msg = json.encode(course.toJson());
-    final key = course.key;
     final response = await http.post("$FIREBASE_URL/courses.json",headers: headers,body: msg);
     print(response.statusCode);
     switch (response.statusCode) {
@@ -62,10 +61,10 @@ class FirebaseService{
     }
   }
 
-  Future<bool> deleteCourse(int index) async {
-    //int indexToPut = SharedAppData.numberOfCourses;
+  Future<bool> deleteCourse(Course course) async {
     Map<String, String> headers = {"Content-type": "application/json"};
-    final response = await http.delete("$FIREBASE_URL/courses/$index.json",headers: headers);
+    final key = course.key;
+    final response = await http.delete("$FIREBASE_URL/courses/$key.json",headers: headers);
     print(response.statusCode);
     switch (response.statusCode) {
       case HttpStatus.ok:

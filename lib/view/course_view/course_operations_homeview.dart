@@ -81,7 +81,7 @@ class _FireHomeViewState extends State<CourseHomePage> {
       key: UniqueKey(),
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) async {
-        await FirebaseService.prefInstance.deleteCourse(index);
+        await FirebaseService.prefInstance.deleteCourse(courseList.elementAt(index));
       },
       child: Card(
         elevation: 4,
