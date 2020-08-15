@@ -2,7 +2,6 @@ import 'package:loginapp/core/models/course.dart';
 import 'package:loginapp/core/services/firebase_course_service.dart';
 import 'file:///C:/Users/Alperen/IdeaProjects/loginapp/lib/view/course_view/course_form_view.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CourseHomePage extends StatefulWidget {
   @override
@@ -77,12 +76,19 @@ class _FireHomeViewState extends State<CourseHomePage> {
         });
   }
 
-  Card _courseCard(List<Course> courseList, int index) {
-    return Card(
-      elevation: 4,
-      child: ListTile(
-        title: Text(courseList.elementAt(index).name),
-        subtitle: Text(courseList.elementAt(index).grade),
+  Dismissible _courseCard(List<Course> courseList, int index) {
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (direction) async {
+        await FirebaseService.prefInstance.deleteCourse(index);
+      },
+      child: Card(
+        elevation: 4,
+        child: ListTile(
+          title: Text(courseList.elementAt(index).name),
+          subtitle: Text(courseList.elementAt(index).grade),
+        ),
       ),
     );
   }
