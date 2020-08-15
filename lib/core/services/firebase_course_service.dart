@@ -20,18 +20,13 @@ class FirebaseService{
     switch (response.statusCode) {
       case HttpStatus.ok:
         final decodedJson = json.decode(response.body); //becomes firebase returns map list, decodedJson[0]['grade]
-        List<Course> courseList = List();
-        for(int i = 0;i<decodedJson.length;i++){
-          if(decodedJson[i] != null){
-            Course course = Course();
-            print(decodedJson[i]['grade']);
-            course.name = decodedJson[i]['name'];
-            course.grade = decodedJson[i]['grade'];
-            courseList.add(course);
-          }
-        }
-        _numberOfCourse = courseList.length;
-        print(_numberOfCourse);
+        List<Course> courseList = List<Course>();
+        decodedJson.forEach((key,value){
+          print(key);
+          Course course = Course.fromJson(value);
+          course.key = key;
+          courseList.add(course);
+        });
         //takes all elements in decodedjson one by one creates an course object  and hold them as list
         return courseList;
       default:
@@ -56,7 +51,8 @@ class FirebaseService{
     //int indexToPut = SharedAppData.numberOfCourses;
     Map<String, String> headers = {"Content-type": "application/json"};
     var msg = json.encode(course.toJson());
-    final response = await http.post("$FIREBASE_URL/courses/$numberOfCourses.json",headers: headers,body: msg);
+    final key = course.key;
+    final response = await http.post("$FIREBASE_URL/courses.json",headers: headers,body: msg);
     print(response.statusCode);
     switch (response.statusCode) {
       case HttpStatus.ok:
