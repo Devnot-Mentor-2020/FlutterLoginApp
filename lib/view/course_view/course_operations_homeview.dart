@@ -44,22 +44,14 @@ class _FireHomeViewState extends State<CourseHomePage> {
       label: Text("Refresh"),
       backgroundColor: Colors.green,
       onPressed:() async{
-         refreshList();
-         courseList = await _courseList;
+        _courseList = FirebaseService.firebaseInstance.getCourses();
+        courseList = await _courseList;
          setState(() {
            calculateAverage(courseList);
          });
 
       }
     );
-  }
-
-   Future<void> refreshList() async {
-    setState(() {
-      _courseList = FirebaseService.firebaseInstance.getCourses();
-
-    });
-
   }
 
   Widget get _courseFutureBuilder =>FutureBuilder(
