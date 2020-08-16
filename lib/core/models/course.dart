@@ -2,8 +2,9 @@ class Course {
   String key;
   String grade;
   String name;
+  double gradeValue;
 
-  Course({this.key, this.grade, this.name});
+  Course({this.key, this.grade, this.name,this.gradeValue});
 
   Course.fromJson(Map<String, dynamic> json) {
     key = json['key'];
